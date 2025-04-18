@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import AudioPlayer from '../components/AudioPlayer';
+import UploadMusic from '../components/UploadMusic';
 import { Moon, Sun, Library } from 'lucide-react';
 import { loadTheme, saveTheme } from '../utils/storageUtils';
 
@@ -18,6 +19,7 @@ const MusicPlayer = () => {
     pause,
     seek,
     adjustVolume,
+    addTrack,
   } = useAudioPlayer();
 
   useEffect(() => {
@@ -58,6 +60,7 @@ const MusicPlayer = () => {
             onSeek={seek}
             onVolumeChange={adjustVolume}
           />
+          <UploadMusic onUpload={addTrack} />
         </div>
 
         <div className="space-y-4">
