@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume, Volume1, Volume2, VolumeX } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { formatTime } from '../utils/audioUtils';
 import { Slider } from './ui/slider';
@@ -10,12 +10,27 @@ const AudioPlayer = ({
   isPlaying, 
   currentTime,
   duration,
+  volume,
   onPlay, 
   onPause,
   onSeek,
+  onVolumeChange,
   className = ""
 }) => {
   const progress = (currentTime / duration) * 100 || 0;
+
+  // Determine which volume icon to display based on the volume level
+  const VolumeIcon = () => {
+    if (volume === 0) return <VolumeX className="h-5 w-5" />;
+    if (volume < 0.3) return <Volume className="h-5 w-5" />;
+    if (volume < 0.7) return <Volume1 className="h-5 w-5" />;
+    return <Volume2 className="h-5 w-5" />;
+  };
+
+  // Handle volume mute/unmute toggle
+  const toggleMute = () => {
+    onVolumeChange(volume > 0 ? 0 : 0.7);
+  };
 
   return (
     <div className={`flex flex-col space-y-4 p-4 bg-card rounded-lg shadow-md ${className}`}>
@@ -51,6 +66,21 @@ const AudioPlayer = ({
         <button className="hover:bg-accent p-2 rounded-full">
           <SkipForward className="h-5 w-5" />
         </button>
+      </div>
+      
+      {/* Volume Control Section */}
+      <div className="flex items-center space-x-2 mt-2">
+        <button onClick={toggleMute} className="hover:bg-accent p-2 rounded-full">
+          <VolumeIcon />
+        </button>
+        <Slider 
+          value={[volume * 100]} 
+          min={0} 
+          max={100} 
+          step={1}
+          onValueChange={(value) => onVolumeChange(value[0] / 100)}
+          className="w-32"
+        />
       </div>
     </div>
   );

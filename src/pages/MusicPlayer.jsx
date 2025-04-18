@@ -13,9 +13,11 @@ const MusicPlayer = () => {
     isPlaying,
     currentTime,
     duration,
+    volume,
     play,
     pause,
     seek,
+    adjustVolume,
   } = useAudioPlayer();
 
   useEffect(() => {
@@ -50,9 +52,11 @@ const MusicPlayer = () => {
             isPlaying={isPlaying}
             currentTime={currentTime}
             duration={duration}
+            volume={volume}
             onPlay={() => play(currentTrack || playlist[0])}
             onPause={pause}
             onSeek={seek}
+            onVolumeChange={adjustVolume}
           />
         </div>
 

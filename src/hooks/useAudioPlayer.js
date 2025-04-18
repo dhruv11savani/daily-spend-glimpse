@@ -12,6 +12,7 @@ export const useAudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.7); // Default volume level
   const audioRef = useRef(new Audio());
 
   useEffect(() => {
@@ -28,12 +29,15 @@ export const useAudioPlayer = () => {
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
 
+    // Set initial volume
+    audio.volume = volume;
+
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, []);
+  }, [volume]);
 
   const addTrack = (track) => {
     const newPlaylist = [...playlist, track];
@@ -74,16 +78,24 @@ export const useAudioPlayer = () => {
     setCurrentTime(value);
   };
 
+  const adjustVolume = (newVolume) => {
+    const clampedVolume = Math.max(0, Math.min(1, newVolume));
+    audioRef.current.volume = clampedVolume;
+    setVolume(clampedVolume);
+  };
+
   return {
     playlist,
     currentTrack,
     isPlaying,
     currentTime,
     duration,
+    volume,
     addTrack,
     removeTrack,
     play,
     pause,
-    seek
+    seek,
+    adjustVolume
   };
 };
